@@ -15,16 +15,15 @@ cask "backright" do
     strategy :github_latest
   end
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "BackRight.app"
 
   # BackRight is free and open source but not notarized by Apple (that needs a paid developer account), so macOS would
   # ask you to confirm it in System Settings. Installing it with Homebrew is you choosing to trust this download, which
   # Homebrew has just verified against the checksum above, so the quarantine flag is cleared here. The app is ad-hoc signed.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/BackRight.app"]
+  postflight_steps do
+    run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "{{appdir}}/BackRight.app"]
   end
 
   zap trash: [
